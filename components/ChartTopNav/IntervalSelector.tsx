@@ -139,12 +139,14 @@ export default function IntervalSelector({
                   {/* Group header */}
                   <button
                     onClick={() => toggleCollapse(group.label)}
-                    className="flex items-center justify-between w-full px-3 py-[5px] bg-transparent border-none cursor-pointer hover:bg-bg-dim transition-colors duration-100"
+                    className="flex items-center justify-between w-full px-3 py-[2px] bg-transparent border-none cursor-pointer hover:bg-bg-dim transition-colors duration-100"
                   >
-                    <span style={{ fontSize: '9px', letterSpacing: '0.08em', color: '#444', fontWeight: 600 }}>
+                    <span 
+                    className='text-text-secondary font-normal uppercase tracking-wider text-[7px]'
+                    >
                       {group.label}
                     </span>
-                    <span className="text-[#333]">
+                    <span className="text-text-primary">
                       {isCollapsed ? <ChevronDown /> : <ChevronUp />}
                     </span>
                   </button>
@@ -163,8 +165,8 @@ export default function IntervalSelector({
                       >
                         <button
                           onClick={() => { onIntervalChange(iv); onCloseMore(); }}
-                          className={`flex-1 text-left border-none bg-transparent cursor-pointer text-[11px] transition-colors duration-100 ${
-                            isActive ? 'text-primary font-bold' : 'text-text-secondary hover:text-text-primary'
+                          className={`flex-1 text-left border-none bg-transparent cursor-pointer text-text-primary text-[11px] transition-colors duration-100 ${
+                            isActive && 'font-bold'
                           }`}
                         >
                           {INTERVAL_FULL_NAME[iv] ?? iv}
