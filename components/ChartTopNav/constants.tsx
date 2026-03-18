@@ -10,6 +10,18 @@ export const INTERVAL_GROUPS = [
   { label: 'DAYS',    intervals: ['1D', '1W', '1M', '3M', '6M'] },
 ];
 
+export const INTERVAL_FULL_NAME: Record<string, string> = {
+  '1s': '1 second',   '5s': '5 seconds',  '10s': '10 seconds',
+  '15s': '15 seconds','30s': '30 seconds', '45s': '45 seconds',
+  '1m': '1 minute',   '2m': '2 minutes',  '3m': '3 minutes',
+  '5m': '5 minutes',  '10m': '10 minutes','15m': '15 minutes',
+  '30m': '30 minutes','45m': '45 minutes',
+  '1h': '1 hour',     '2h': '2 hours',    '3h': '3 hours',
+  '4h': '4 hours',    '6h': '6 hours',    '8h': '8 hours',    '12h': '12 hours',
+  '1D': '1 day',      '1W': '1 week',     '1M': '1 month',
+  '3M': '3 months',   '6M': '6 months',
+};
+
 export const DEFAULT_STARRED = ['1m', '5m', '15m', '1h', '4h', '1D'];
 
 export const CHART_TYPES = [

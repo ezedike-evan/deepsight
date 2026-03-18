@@ -1,16 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { INTERVAL_GROUPS, DEFAULT_STARRED } from './constants';
+import { INTERVAL_GROUPS, DEFAULT_STARRED, INTERVAL_FULL_NAME } from './constants';
 import { MenuKey } from './types';
 
 const STARRED_KEY = 'deepsight:starred-intervals';
+
+const CANONICAL_ORDER = INTERVAL_GROUPS.flatMap((g) => g.intervals);
+
+function sortByCanonical(intervals: string[]): string[] {
+  return [...intervals].sort(
+    (a, b) => CANONICAL_ORDER.indexOf(a) - CANONICAL_ORDER.indexOf(b)
+  );
+}
 
 function loadStarred(): string[] {
   if (typeof window === 'undefined') return DEFAULT_STARRED;
   try {
     const saved = localStorage.getItem(STARRED_KEY);
-    return saved ? JSON.parse(saved) : DEFAULT_STARRED;
+    return saved ? sortByCanonical(JSON.parse(saved)) : DEFAULT_STARRED;
   } catch {
     return DEFAULT_STARRED;
   }
@@ -69,7 +77,7 @@ export default function IntervalSelector({
   const toggleStar = (iv: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setStarred((prev) => {
-      const next = prev.includes(iv) ? prev.filter((s) => s !== iv) : [...prev, iv];
+      const next = sortByCanonical(prev.includes(iv) ? prev.filter((s) => s !== iv) : [...prev, iv]);
       try { localStorage.setItem(STARRED_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
@@ -91,7 +99,7 @@ export default function IntervalSelector({
           className={`py-[3px] px-[7px] h-7 border-none rounded-[2px] text-[10px] cursor-pointer tracking-[0.03em] transition-colors duration-100 ${
             activeInterval === iv
               ? 'bg-bg-dim text-primary font-bold'
-              : 'bg-transparent text-text-muted font-normal hover:text-text-secondary'
+              : 'bg-transparent text-text-primary font-normal hover:text-text-secondary'
           }`}
         >
           {iv}
@@ -159,7 +167,7 @@ export default function IntervalSelector({
                             isActive ? 'text-primary font-bold' : 'text-text-secondary hover:text-text-primary'
                           }`}
                         >
-                          {iv}
+                          {INTERVAL_FULL_NAME[iv] ?? iv}
                         </button>
                         <button
                           onClick={(e) => toggleStar(iv, e)}
