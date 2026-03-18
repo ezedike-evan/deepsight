@@ -4,6 +4,7 @@
 :root,
 [data-theme="dark"] {
   --bg-base:          #000000;
+  --bg-dim:           rgba(255, 255, 255, 0.15);
   --bg-panel:         #080808;
   --bg-elevated:      #0f0f0f;
   --bg-hover:         #141414;
@@ -33,6 +34,7 @@
 /* ─── Light theme ───────────────────────────────────────────────── */
 [data-theme="light"] {
   --bg-base:          #f5f5f5;
+  --bg-dim:           rgba(0, 0, 0, 0.15);
   --bg-panel:         #ebebeb;
   --bg-elevated:      #e0e0e0;
   --bg-hover:         #d4d4d4;
@@ -96,6 +98,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 /* ─── Tailwind utilities ─ CSS-variable-based ───────────────────── */
 @utility bg-bg-base     { background-color: var(--bg-base); }
+@utility bg-bg-dim      { background-color: var(--bg-dim); }
 @utility bg-bg-panel    { background-color: var(--bg-panel); }
 @utility bg-bg-elevated { background-color: var(--bg-elevated); }
 @utility bg-bg-hover    { background-color: var(--bg-hover); }
