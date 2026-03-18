@@ -1,8 +1,55 @@
 'use client';
 
-import { INTERVALS_PRIMARY, INTERVALS_MORE } from './constants';
+import { useState } from 'react';
+import { INTERVAL_GROUPS, DEFAULT_STARRED } from './constants';
 import { MenuKey } from './types';
-import { ChevronDown } from './shared';
+
+const STARRED_KEY = 'deepsight:starred-intervals';
+
+function loadStarred(): string[] {
+  if (typeof window === 'undefined') return DEFAULT_STARRED;
+  try {
+    const saved = localStorage.getItem(STARRED_KEY);
+    return saved ? JSON.parse(saved) : DEFAULT_STARRED;
+  } catch {
+    return DEFAULT_STARRED;
+  }
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill={filled ? '#e8a020' : 'none'} stroke={filled ? '#e8a020' : '#444'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  );
+}
+
+function ChevronUp() {
+  return (
+    <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
+      <path d="M7 4L4 1L1 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function ChevronDown() {
+  return (
+    <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
+      <path d="M1 1L4 4L7 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function GridIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+      <rect x="1" y="1" width="4" height="4" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+      <rect x="7" y="1" width="4" height="4" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+      <rect x="1" y="7" width="4" height="4" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+      <rect x="7" y="7" width="4" height="4" rx="0.5" stroke="currentColor" strokeWidth="1.2"/>
+    </svg>
+  );
+}
 
 interface IntervalSelectorProps {
   activeInterval:   string;
@@ -15,68 +62,117 @@ interface IntervalSelectorProps {
 export default function IntervalSelector({
   activeInterval, onIntervalChange, openMenu, onToggleMore, onCloseMore,
 }: IntervalSelectorProps) {
-  const isMoreInterval = INTERVALS_MORE.includes(activeInterval);
-  const moreOpen = openMenu === 'more-intervals';
+  const [starred, setStarred] = useState<string[]>(loadStarred);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const panelOpen = openMenu === 'more-intervals';
+
+  const toggleStar = (iv: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setStarred((prev) => {
+      const next = prev.includes(iv) ? prev.filter((s) => s !== iv) : [...prev, iv];
+      try { localStorage.setItem(STARRED_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+
+  const toggleCollapse = (label: string) => {
+    setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
+
+  const activeNotStarred = !starred.includes(activeInterval);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1px', flexShrink: 0 }}>
-      {INTERVALS_PRIMARY.map((iv) => (
+    <div className="flex items-center gap-px flex-shrink-0">
+      {/* Starred intervals */}
+      {starred.map((iv) => (
         <button
           key={iv}
           onClick={() => onIntervalChange(iv)}
-          style={{
-            padding: '3px 7px', height: '28px',
-            background: activeInterval === iv ? '#161616' : 'transparent',
-            border: 'none', borderRadius: '2px',
-            color: activeInterval === iv ? '#e8a020' : '#444',
-            fontSize: '10px', cursor: 'pointer',
-            letterSpacing: '0.03em', transition: 'color 0.1s',
-            fontWeight: activeInterval === iv ? 700 : 400,
-          }}
-          onMouseEnter={(e) => { if (activeInterval !== iv) (e.currentTarget as HTMLElement).style.color = '#777'; }}
-          onMouseLeave={(e) => { if (activeInterval !== iv) (e.currentTarget as HTMLElement).style.color = '#444'; }}
+          className={`py-[3px] px-[7px] h-7 border-none rounded-[2px] text-[10px] cursor-pointer tracking-[0.03em] transition-colors duration-100 ${
+            activeInterval === iv
+              ? 'bg-bg-dim text-primary font-bold'
+              : 'bg-transparent text-text-muted font-normal hover:text-text-secondary'
+          }`}
         >
           {iv}
         </button>
       ))}
 
-      {/* More intervals dropdown */}
-      <div style={{ position: 'relative' }}>
+      {/* Active interval if not starred */}
+      {activeNotStarred && (
+        <button
+          onClick={() => {}}
+          className="py-[3px] px-[7px] h-7 border-none rounded-[2px] text-[10px] cursor-default tracking-[0.03em] bg-bg-dim text-primary font-bold"
+        >
+          {activeInterval}
+        </button>
+      )}
+
+      {/* Panel trigger */}
+      <div className="relative">
         <button
           onClick={onToggleMore}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '3px',
-            padding: '3px 6px', height: '28px',
-            background: isMoreInterval || moreOpen ? '#161616' : 'transparent',
-            border: 'none', borderRadius: '2px',
-            color: isMoreInterval ? '#e8a020' : '#444',
-            fontSize: '10px', cursor: 'pointer', transition: 'color 0.1s',
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#777'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = isMoreInterval ? '#e8a020' : '#444'; }}
+          className={`flex items-center justify-center w-7 h-7 border-none rounded-[2px] cursor-pointer transition-colors duration-100 ${
+            panelOpen ? 'bg-bg-dim text-text-secondary' : 'bg-transparent text-text-muted hover:text-text-secondary'
+          }`}
         >
-          {isMoreInterval ? activeInterval : <ChevronDown />}
-          {isMoreInterval && <ChevronDown />}
+          <GridIcon />
         </button>
 
-        {moreOpen && (
-          <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, background: '#080808', border: '1px solid #1e1e1e', borderRadius: '2px', overflow: 'hidden', zIndex: 200, minWidth: '80px' }}>
-            {INTERVALS_MORE.map((iv) => (
-              <button
-                key={iv}
-                onClick={() => { onIntervalChange(iv); onCloseMore(); }}
-                style={{
-                  display: 'block', width: '100%', textAlign: 'left', padding: '7px 12px',
-                  background: activeInterval === iv ? '#161616' : 'transparent',
-                  color: activeInterval === iv ? '#e8a020' : '#555',
-                  cursor: 'pointer', fontSize: '11px', transition: 'color 0.1s',
-                }}
-                onMouseEnter={(e) => { if (activeInterval !== iv) (e.currentTarget as HTMLElement).style.color = '#888'; }}
-                onMouseLeave={(e) => { if (activeInterval !== iv) (e.currentTarget as HTMLElement).style.color = '#555'; }}
-              >
-                {iv}
-              </button>
-            ))}
+        {panelOpen && (
+          <div
+            className="absolute top-[calc(100%+4px)] left-0 bg-bg-panel rounded-[7px] z-[200] overflow-hidden"
+            style={{ minWidth: '160px', border: '1px solid #1a1a1a' }}
+          >
+            {INTERVAL_GROUPS.map((group) => {
+              const isCollapsed = !!collapsed[group.label];
+              return (
+                <div key={group.label}>
+                  {/* Group header */}
+                  <button
+                    onClick={() => toggleCollapse(group.label)}
+                    className="flex items-center justify-between w-full px-3 py-[5px] bg-transparent border-none cursor-pointer hover:bg-bg-dim transition-colors duration-100"
+                  >
+                    <span style={{ fontSize: '9px', letterSpacing: '0.08em', color: '#444', fontWeight: 600 }}>
+                      {group.label}
+                    </span>
+                    <span className="text-[#333]">
+                      {isCollapsed ? <ChevronDown /> : <ChevronUp />}
+                    </span>
+                  </button>
+
+                  {/* Intervals */}
+                  {!isCollapsed && group.intervals.map((iv) => {
+                    const isActive  = activeInterval === iv;
+                    const isStarred = starred.includes(iv);
+                    return (
+                      <div
+                        key={iv}
+                        className={`flex items-center justify-between px-3 transition-colors duration-100 ${
+                          isActive ? 'bg-bg-dim' : 'hover:bg-bg-dim'
+                        }`}
+                        style={{ height: '30px' }}
+                      >
+                        <button
+                          onClick={() => { onIntervalChange(iv); onCloseMore(); }}
+                          className={`flex-1 text-left border-none bg-transparent cursor-pointer text-[11px] transition-colors duration-100 ${
+                            isActive ? 'text-primary font-bold' : 'text-text-secondary hover:text-text-primary'
+                          }`}
+                        >
+                          {iv}
+                        </button>
+                        <button
+                          onClick={(e) => toggleStar(iv, e)}
+                          className="flex items-center justify-center w-5 h-5 border-none bg-transparent cursor-pointer rounded-[2px] hover:bg-bg-base transition-colors duration-100"
+                        >
+                          <StarIcon filled={isStarred} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

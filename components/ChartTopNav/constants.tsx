@@ -3,6 +3,15 @@ export const PAIRS = ['SUI/USDC', 'DEEP/USDC', 'WETH/USDC', 'WBTC/USDC', 'NS/USD
 export const INTERVALS_PRIMARY = ['1m', '5m', '15m', '1h', '4h', '1D'];
 export const INTERVALS_MORE    = ['30m', '2h', '3h', '12h', '1W'];
 
+export const INTERVAL_GROUPS = [
+  { label: 'SECONDS', intervals: ['1s', '5s', '10s', '15s', '30s', '45s'] },
+  { label: 'MINUTES', intervals: ['1m', '2m', '3m', '5m', '10m', '15m', '30m', '45m'] },
+  { label: 'HOURS',   intervals: ['1h', '2h', '3h', '4h', '6h', '8h', '12h'] },
+  { label: 'DAYS',    intervals: ['1D', '1W', '1M', '3M', '6M'] },
+];
+
+export const DEFAULT_STARRED = ['1m', '5m', '15m', '1h', '4h', '1D'];
+
 export const CHART_TYPES = [
   {
     id: 'candle', label: 'Candles',
