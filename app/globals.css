@@ -8,10 +8,10 @@
   --bg-elevated:      #0f0f0f;
   --bg-hover:         #141414;
 
-  --border:           #1a1a1a;
+  --border:           #c8c8c8;
   --border-subtle:    #111111;
 
-  --text-primary:     #d4d4d4;
+  --text-primary:     #ffffff;
   --text-secondary:   #888888;
   --text-muted:       #444444;
   --text-dim:         #252525;
@@ -37,10 +37,10 @@
   --bg-elevated:      #e0e0e0;
   --bg-hover:         #d4d4d4;
 
-  --border:           #cccccc;
+  --border:           #535353;
   --border-subtle:    #dddddd;
 
-  --text-primary:     #111111;
+  --text-primary:     #000000;
   --text-secondary:   #444444;
   --text-muted:       #888888;
   --text-dim:         #aaaaaa;

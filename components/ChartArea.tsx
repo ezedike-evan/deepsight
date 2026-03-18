@@ -6,11 +6,9 @@ type IChartApi = import('lightweight-charts').IChartApi;
 type ISeriesApi<T extends import('lightweight-charts').SeriesType> = import('lightweight-charts').ISeriesApi<T>;
 
 type OHLCBar = { time: number; open: number; high: number; low: number; close: number };
-type VolBar  = { time: number; value: number; color: string };
 
-function generateBars(count: number): { candles: OHLCBar[]; volumes: VolBar[] } {
+function generateBars(count: number): { candles: OHLCBar[] } {
   const candles: OHLCBar[] = [];
-  const volumes: VolBar[]  = [];
   const now = Math.floor(Date.now() / 1000);
   let close = 3.72;
 
@@ -21,12 +19,10 @@ function generateBars(count: number): { candles: OHLCBar[]; volumes: VolBar[] } 
     close = Math.max(3.5, Math.min(4.1, open + move));
     const high  = Math.max(open, close) + Math.random() * 0.015;
     const low   = Math.min(open, close) - Math.random() * 0.015;
-    const volume = 50000 + Math.random() * 300000;
 
     candles.push({ time, open, high, low, close });
-    volumes.push({ time, value: volume, color: close >= open ? 'rgba(34,201,122,0.45)' : 'rgba(232,53,53,0.35)' });
   }
-  return { candles, volumes };
+  return { candles };
 }
 
 const TAPE_TRADES = [
@@ -176,7 +172,7 @@ export default function ChartArea({
       });
 
       chartRef.current = chart;
-      const { candles, volumes } = generateBars(120);
+      const { candles } = generateBars(520);
 
       const candleSeries = chart.addCandlestickSeries({
         upColor: '#22c97a', downColor: '#e83535',
@@ -186,11 +182,6 @@ export default function ChartArea({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       candleSeries.setData(candles as any);
       candleSeriesRef.current = candleSeries;
-
-      const volumeSeries = chart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'volume' });
-      volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      volumeSeries.setData(volumes as any);
 
       chart.timeScale().fitContent();
 
