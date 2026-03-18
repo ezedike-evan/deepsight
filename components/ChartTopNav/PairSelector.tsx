@@ -25,15 +25,15 @@ export default function PairSelector({ openMenu, onToggle }: PairSelectorProps) 
       </button>
 
       {isOpen && (
-        <div className="absolute top-[calc(100%+4px)] left-0 bg-[#080808] border border-[#1e1e1e] rounded-[2px] overflow-hidden z-[200] min-w-[130px]">
+        <div className="absolute top-[calc(100%+4px)] left-0 bg-bg-panel rounded-[7px] overflow-hidden z-[200] min-w-[130px]">
           {PAIRS.map((pair) => (
             <button
               key={pair}
               onClick={() => { setSelectedPair(pair); onToggle(); }}
               className={`block w-full text-left py-[7px] px-[10px] cursor-pointer text-[11px] tracking-[0.04em] transition-colors duration-100 border-l-2 ${
                 pair === selectedPair
-                  ? 'bg-[#0f0f0f] text-[#e8a020] border-l-[#e8a020]'
-                  : 'bg-transparent text-[#555] border-l-transparent hover:text-[#888]'
+                  ? 'bg-bg-dim text-primary border-l-primary font-bold'
+                  : 'bg-transparent text-text-primary border-l-transparent hover:text-text-secondary'
               }`}
             >
               {pair}

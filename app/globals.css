@@ -17,12 +17,12 @@
   --text-muted:       #444444;
   --text-dim:         #252525;
 
-  --amber:            #e8a020;
-  --amber-dim:        #a06010;
-  --amber-glow:       rgba(232, 160, 32, 0.12);
-  --amber-border:     rgba(232, 160, 32, 0.3);
+  --primary:          #e8a020;
+  --primary-dim:      #a06010;
+  --primary-glow:     rgba(232, 160, 32, 0.12);
+  --primary-border:   rgba(232, 160, 32, 0.3);
 
-  --green:            #22c97a;
+  --green:            #22c93b;
   --green-dim:        rgba(34, 201, 122, 0.15);
 
   --red:              #e83535;
@@ -47,12 +47,12 @@
   --text-muted:       #888888;
   --text-dim:         #aaaaaa;
 
-  --amber:            #c47d08;
-  --amber-dim:        #8a5504;
-  --amber-glow:       rgba(196, 125, 8, 0.12);
-  --amber-border:     rgba(196, 125, 8, 0.3);
+  --primary:          #c47d08;
+  --primary-dim:      #8a5504;
+  --primary-glow:     rgba(196, 125, 8, 0.12);
+  --primary-border:   rgba(196, 125, 8, 0.3);
 
-  --green:            #158a4e;
+  --green:            #22e93b;
   --green-dim:        rgba(21, 138, 78, 0.15);
 
   --red:              #c42020;
@@ -106,16 +106,19 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 @utility border-border        { border-color: var(--border); }
 @utility border-border-subtle { border-color: var(--border-subtle); }
 
+@utility border-primary        { border-color: var(--primary); }
+@utility border-primary-subtle { border-color: var(--primary-subtle); }
+
 @utility text-text-primary   { color: var(--text-primary); }
 @utility text-text-secondary { color: var(--text-secondary); }
 @utility text-text-muted     { color: var(--text-muted); }
 @utility text-text-dim       { color: var(--text-dim); }
 
-@utility text-amber     { color: var(--amber); }
+@utility text-primary     { color: var(--primary); }
 @utility text-green     { color: var(--green); }
 @utility text-red       { color: var(--red); }
 
-@utility bg-amber-glow  { background-color: var(--amber-glow); }
+@utility bg-primary-glow  { background-color: var(--primary-glow); }
 @utility bg-green-dim   { background-color: var(--green-dim); }
 @utility bg-red-dim     { background-color: var(--red-dim); }
 
