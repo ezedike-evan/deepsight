@@ -115,3 +115,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 @utility bg-amber-glow  { background-color: var(--amber-glow); }
 @utility bg-green-dim   { background-color: var(--green-dim); }
 @utility bg-red-dim     { background-color: var(--red-dim); }
+
+#tv-attr-logo{
+  display: none !important;
+}

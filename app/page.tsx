@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import TopNav from '@/components/TopNav';
+import ChartTopNav from '@/components/ChartTopNav';
 import ChartArea from '@/components/ChartArea';
 import MarketStatusBar from '@/components/MarketStatusBar';
 
@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className="h-dvh flex flex-col overflow-hidden bg-bg-base">
-      <TopNav
+      <ChartTopNav
         activeInterval={activeInterval}
         onIntervalChange={setActiveInterval}
         activeChartType={activeChartType}
