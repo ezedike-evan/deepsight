@@ -120,11 +120,11 @@ export default function IntervalSelector({
       <div className="relative">
         <button
           onClick={onToggleMore}
-          className={`flex items-center justify-center w-7 h-7 border-none rounded-[2px] cursor-pointer transition-colors duration-100 ${
-            panelOpen ? 'bg-bg-dim text-text-secondary' : 'bg-transparent text-text-muted hover:text-text-secondary'
+          className={`flex items-center justify-center w-7 h-7 border-none rounded-sm cursor-pointer transition-colors duration-100 ${
+            panelOpen ? 'bg-bg-dim text-text-primary' : 'bg-transparent hover:bg-bg-dim text-text-primary'
           }`}
         >
-          <GridIcon />
+          {panelOpen ? <ChevronUp /> : <ChevronDown />}
         </button>
 
         {panelOpen && (
