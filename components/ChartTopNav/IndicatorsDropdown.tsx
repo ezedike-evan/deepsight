@@ -2,7 +2,7 @@
 
 import { INDICATORS } from './constants';
 import { MenuKey } from './types';
-import { ChevronDown } from './shared';
+import { ChevronDown } from '@/components/ui/icons';
 
 interface IndicatorsDropdownProps {
   activeIndicators:  string[];
@@ -15,30 +15,23 @@ export default function IndicatorsDropdown({
   activeIndicators, onToggleIndicator, openMenu, onToggle,
 }: IndicatorsDropdownProps) {
   const isOpen = openMenu === 'indicators';
+  const hasActive = activeIndicators.length > 0;
 
   return (
-    <div style={{ position: 'relative', flexShrink: 0 }}>
+    <div className="relative flex-shrink-0">
       <button
         onClick={onToggle}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '5px',
-          padding: '4px 8px', height: '28px',
-          background: isOpen ? '#161616' : 'transparent',
-          border: 'none', borderRadius: '2px',
-          color: activeIndicators.length > 0 ? '#ccc' : '#555',
-          fontSize: '10px', cursor: 'pointer', transition: 'color 0.1s',
-          letterSpacing: '0.04em',
-        }}
-        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#bbb'; }}
-        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = activeIndicators.length > 0 ? '#ccc' : '#555'; }}
+        className={`flex items-center gap-[5px] px-2 h-7 border-none rounded-[2px] text-[10px] tracking-[0.04em] cursor-pointer transition-colors duration-100 ${
+          isOpen ? 'bg-bg-dim' : 'bg-transparent'
+        } ${hasActive ? 'text-text-primary' : 'text-text-muted'} hover:text-text-secondary`}
       >
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
           <polyline points="1,11 4,5 7,8 10,3 13,6" stroke="currentColor" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
           <line x1="1" y1="13" x2="13" y2="13" stroke="currentColor" strokeWidth="1" opacity="0.4"/>
         </svg>
         Indicators
-        {activeIndicators.length > 0 && (
-          <span style={{ background: '#e8a02033', color: '#e8a020', fontSize: '8px', padding: '0 4px', borderRadius: '2px', fontWeight: 700 }}>
+        {hasActive && (
+          <span className="bg-primary/20 text-primary text-[8px] font-bold px-1 rounded-[2px]">
             {activeIndicators.length}
           </span>
         )}
@@ -46,23 +39,26 @@ export default function IndicatorsDropdown({
       </button>
 
       {isOpen && (
-        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, background: '#080808', border: '1px solid #1e1e1e', borderRadius: '2px', overflow: 'hidden', zIndex: 200, minWidth: '140px' }}>
+        <div
+          className="absolute top-[calc(100%+4px)] left-0 bg-bg-panel rounded-[7px] z-[200] overflow-hidden"
+          style={{ minWidth: '140px', border: '1px solid #1a1a1a' }}
+        >
           {INDICATORS.map((ind) => {
             const active = activeIndicators.includes(ind);
             return (
               <button
                 key={ind}
                 onClick={() => onToggleIndicator(ind)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  width: '100%', textAlign: 'left', padding: '7px 10px',
-                  background: 'transparent', color: active ? '#e8a020' : '#555',
-                  cursor: 'pointer', fontSize: '11px', transition: 'color 0.1s',
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#0f0f0f'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                className={`flex items-center gap-2 w-full text-left py-[7px] px-3 bg-transparent border-none cursor-pointer text-[11px] transition-colors duration-100 hover:bg-bg-dim ${
+                  active ? 'text-primary' : 'text-text-primary'
+                }`}
               >
-                <span style={{ width: '8px', height: '8px', borderRadius: '1px', border: `1px solid ${active ? '#e8a020' : '#333'}`, background: active ? '#e8a020' : 'transparent', display: 'inline-block', flexShrink: 0, transition: 'all 0.1s' }} />
+                <span
+                  className={`w-2 h-2 rounded-[1px] flex-shrink-0 transition-all duration-100 ${
+                    active ? 'bg-primary border-primary' : 'bg-transparent border-[#333]'
+                  }`}
+                  style={{ border: `1px solid ${active ? 'currentColor' : '#333'}` }}
+                />
                 {ind}
               </button>
             );
