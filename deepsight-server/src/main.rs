@@ -1,7 +1,10 @@
 mod types;
+mod websocket;
 
+use serde_json;
 use tokio;
 use types::TradeEvent;
+use websocket::start_websocket_server;
 
 
 #[tokio::main]
@@ -18,14 +21,15 @@ async fn main() {
                 pool_id: String::from("pool1")
             };
             println!("New trade event: {:?}", event);
+            let json = serde_json::to_string(&event).unwrap();
+            println!("Serialized JSON: {}", json);
             tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
         }
     });
 
     let handle2 = tokio::spawn(async {
         loop {
-            println!("Serving WebSocket clients...");
-            tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
+            start_websocket_server().await;
         }
     });
 
