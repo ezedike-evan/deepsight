@@ -1,8 +1,11 @@
 mod types;
 mod websocket;
 
-use serde_json;
-use tokio;
+use serde_json::to_string;
+use tokio::spawn;
+use tokio::time::{sleep, Duration};
+use tokio::join;
+use tokio::sync::mpsc::channel;
 use types::TradeEvent;
 use websocket::start_websocket_server;
 
@@ -10,8 +13,9 @@ use websocket::start_websocket_server;
 #[tokio::main]
 async fn main() {
     println!("DeepSight server starting...");
+    let (tx, rx) = channel::<String>(100);
 
-    let handle1 = tokio::spawn(async {
+    let handle1 = spawn(async move{
         loop {
             let event = TradeEvent{
                 price: 3.8246,
@@ -21,17 +25,18 @@ async fn main() {
                 pool_id: String::from("pool1")
             };
             println!("New trade event: {:?}", event);
-            let json = serde_json::to_string(&event).unwrap();
+            let json = to_string(&event).unwrap();
             println!("Serialized JSON: {}", json);
-            tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+            if tx.send(json).await.is_err(){
+                println!("WebSocket server disconnected, skipping event generation");
+            };
+            sleep(Duration::from_secs(2)).await;
         }
     });
 
-    let handle2 = tokio::spawn(async {
-        loop {
-            start_websocket_server().await;
-        }
+    let handle2 = spawn(async {
+        start_websocket_server(rx).await;
     });
 
-    let _ = tokio::join!(handle1, handle2);
+    let _ = join!(handle1, handle2);
 }
