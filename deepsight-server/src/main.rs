@@ -4,6 +4,7 @@ mod websocket;
 
 use tokio::spawn;
 use tokio::join;
+use tokio::time::{sleep, Duration};
 use tokio::sync::mpsc::channel;
 use websocket::start_websocket_server;
 
@@ -11,12 +12,21 @@ use websocket::start_websocket_server;
 #[tokio::main]
 async fn main() {
     println!("DeepSight server starting...");
-    let (_tx, rx) = channel::<String>(100);
+    let (tx, rx) = channel::<String>(100);
 
     let handle1 = spawn(async move{
         loop {
-            deepbook::connect().await;
-            tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+        match deepbook::connect().await {
+            Some(client) => {
+                println!("Connection established, starting event subscription...");
+                deepbook::subscribe_to_events(client, tx.clone()).await;
+                println!("Subscription ended, reconnecting in 5 seconds...");
+            }
+            None => {
+                println!("Connection failed, retrying in 5 seconds...");
+            }
+        }
+        sleep(Duration::from_secs(5)).await;
         }
     });
 
